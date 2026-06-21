@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: yas
+  namespace: argocd
+spec:
+  description: YAS application environments (dev, staging) managed via GitOps
+  # Only charts/manifests from this config repo may be deployed under this project.
+  sourceRepos:
+    - https://github.com/baohuyhuy/yas-deploy.git
+  # Apps in this project may only deploy into the dev and staging namespaces.
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: dev
+    - server: https://kubernetes.default.svc
+      namespace: staging
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'

@@ -1,0 +1,61 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: yas-staging
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - list:
+        elements:
+          - { svc: cart }
+          - { svc: customer }
+          - { svc: inventory }
+          - { svc: location }
+          - { svc: media }
+          - { svc: order }
+          - { svc: payment }
+          - { svc: payment-paypal }
+          - { svc: product }
+          - { svc: promotion }
+          - { svc: rating }
+          - { svc: recommendation }
+          - { svc: sampledata }
+          - { svc: search }
+          - { svc: tax }
+          - { svc: webhook }
+          - { svc: storefront-bff }
+          - { svc: backoffice-bff }
+          - { svc: storefront-ui }
+          - { svc: backoffice-ui }
+  template:
+    metadata:
+      name: 'staging-{{.svc}}'
+      labels:
+        env: staging
+        svc: '{{.svc}}'
+    spec:
+      project: yas
+      # Multi-source: the first source is a bare `ref` that exposes this repo as
+      # $values so the per-env values file (outside the chart dir) can be referenced;
+      # the second source is the service chart itself.
+      sources:
+        - repoURL: https://github.com/baohuyhuy/yas-deploy.git
+          targetRevision: main
+          ref: values
+        - repoURL: https://github.com/baohuyhuy/yas-deploy.git
+          targetRevision: main
+          path: 'charts/{{.svc}}'
+          helm:
+            valueFiles:
+              - '$values/envs/staging/values.yaml'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: staging
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=false

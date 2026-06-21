@@ -1,0 +1,15 @@
+# Dev environment overrides.
+# The yas-dev ApplicationSet layers this file on top of every service chart.
+# CI rewrites the `tag:` lines below on each push to main (latest main image).
+# Ingress is disabled in dev/staging to avoid host collisions with the `yas`
+# namespace; access apps via `kubectl port-forward` for the demo.
+backend:
+  image:
+    tag: main
+  ingress:
+    enabled: false
+ui:
+  image:
+    tag: main
+  ingress:
+    enabled: false

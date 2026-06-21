@@ -1,0 +1,16 @@
+# Staging environment overrides.
+# The yas-staging ApplicationSet layers this file on top of every service chart.
+# The release CI (on a `v*` git tag) rewrites the `tag:` lines below to the
+# release version (e.g. v1.2.3). Until the first release is cut it tracks `main`.
+# Ingress is disabled in dev/staging to avoid host collisions with the `yas`
+# namespace; access apps via `kubectl port-forward` for the demo.
+backend:
+  image:
+    tag: main
+  ingress:
+    enabled: false
+ui:
+  image:
+    tag: main
+  ingress:
+    enabled: false
