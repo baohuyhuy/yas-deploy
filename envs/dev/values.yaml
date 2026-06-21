@@ -10,10 +10,7 @@
 # Ingress is disabled in dev/staging to avoid host collisions with the `yas`
 # namespace; access apps via `kubectl port-forward` for the demo.
 backend:
-  # Held at 0: the single shared Postgres pod OOMs under the connection load of
-  # three YAS copies. dev's 20 Applications stay present and Synced in ArgoCD
-  # (GitOps proven); scale to 1 to run dev once Postgres has more memory headroom.
-  replicaCount: 0
+  replicaCount: 1
   image:
     tag: main
     pullPolicy: Always
