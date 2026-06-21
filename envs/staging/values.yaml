@@ -7,6 +7,13 @@
 backend:
   image:
     tag: main
+  # See envs/dev/values.yaml: cap Hikari pools so yas + dev + staging together
+  # stay under the shared Postgres max_connections.
+  extraEnvs:
+    - name: SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE
+      value: "2"
+    - name: SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE
+      value: "1"
   ingress:
     enabled: false
 ui:
