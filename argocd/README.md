@@ -104,10 +104,20 @@ git tag v1.0.0 && git push origin v1.0.0
 
 ## Notes / gotchas
 
-- **Shared Postgres connection cap.** Three YAS copies (yas + dev + staging) share
-  one Postgres. `envs/{dev,staging}/values.yaml` cap each service's Hikari pool
-  (`SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE=2`) so the combined connection count
-  stays under `max_connections`; without it services crashloop on startup.
+- **Shared Postgres memory.** Three YAS copies (yas + dev + staging) share one
+  Postgres pod. The Zalando CR ships a tiny **500Mi** memory limit, which OOMKills
+  the DB once enough services connect (each backend ~5-10MB). Two mitigations:
+  1. Raise the limit (the node has 32GB free):
+     ```bash
+     kubectl patch postgresql postgresql -n postgres --type merge \
+       -p '{"spec":{"resources":{"requests":{"memory":"1Gi"},"limits":{"memory":"3Gi"}}}}'
+     ```
+  2. Cap each service's Hikari pool in `envs/{dev,staging}/values.yaml`
+     (`SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE=2`) to bound total connections.
+- **`staging` is held at `replicaCount: 0`** in `envs/staging/values.yaml`: even at
+  3Gi, running all three full copies at once is tight on the single worker. Its 20
+  Applications still stay present and Synced in ArgoCD (the GitOps deliverable). To
+  demo staging at runtime, scale `dev` to 0 first, then bump staging to 1.
 - **Multi-source `$values`.** The ApplicationSets use ArgoCD's two-source pattern
   (a bare `ref: values` source + the chart source) so one env file can override
   every chart, even though it lives outside the chart directory.
