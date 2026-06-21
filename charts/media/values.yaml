@@ -1,0 +1,30 @@
+backend:
+  image:
+    repository: baohuyhuy/yas-media
+    tag: main
+
+  nameOverride: media
+  fullnameOverride: media
+  databaseName: media
+  ingress:
+    enabled: true
+    className: nginx
+    host: api.yas.local.com
+    path: /media
+    pathType: Prefix
+  extraVolumes:
+    - name: media-application
+      configMap:
+        name: media-application-configmap
+    # Persistent store for uploaded/sample media files (served from /images).
+    - name: media-images
+      persistentVolumeClaim:
+        claimName: media-images-pvc
+  extraVolumeMounts:
+    - name: media-application
+      mountPath: /opt/yas/media
+    - name: media-images
+      mountPath: /images
+  extraApplicationConfigPaths:
+    - /opt/yas/media/media-application.yaml
+

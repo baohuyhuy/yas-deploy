@@ -1,0 +1,10 @@
+backend:
+  image:
+    repository: baohuyhuy/yas-inventory
+    tag: main
+
+  nameOverride: inventory
+  fullnameOverride: inventory
+  databaseName: inventory
+  ingress:
+    enabled: false

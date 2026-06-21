@@ -1,0 +1,10 @@
+backend:
+  image:
+    repository: baohuyhuy/yas-promotion
+    tag: main
+
+  nameOverride: promotion
+  fullnameOverride: promotion
+  databaseName: promotion
+  ingress:
+    enabled: false

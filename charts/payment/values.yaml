@@ -1,0 +1,22 @@
+backend:
+  image:
+    # Use the fork's own image: upstream yas-payment:latest is broken on this
+    # fork (Liquibase validation / renamed `enabled` column). baohuyhuy/yas-payment
+    # is built by payment-image-ci.yaml.
+    repository: baohuyhuy/yas-payment
+    tag: main
+
+  nameOverride: payment
+  fullnameOverride: payment
+  databaseName: payment
+  ingress:
+    enabled: false
+  extraVolumes:
+    - name: payment-application-config
+      configMap:
+        name: payment-application-configmap
+  extraVolumeMounts:
+    - name: payment-application-config
+      mountPath: /opt/yas/payment
+  extraApplicationConfigPaths:
+    - /opt/yas/payment/payment-application.yaml

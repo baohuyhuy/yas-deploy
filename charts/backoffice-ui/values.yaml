@@ -1,0 +1,9 @@
+ui:
+  image:
+    repository: baohuyhuy/yas-backoffice-ui
+    tag: main
+  nameOverride: backoffice-ui
+  fullnameOverride: backoffice-ui
+  # Served by backoffice-bff gateway (/** route); no direct ingress.
+  ingress:
+    enabled: false

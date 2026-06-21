@@ -1,0 +1,6 @@
+# Helm
+*.lock.bak
+
+# Editor / OS
+.DS_Store
+*.swp
