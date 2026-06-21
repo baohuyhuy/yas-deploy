@@ -4,7 +4,13 @@
 # release version (e.g. v1.2.3). Until the first release is cut it tracks `main`.
 # Ingress is disabled in dev/staging to avoid host collisions with the `yas`
 # namespace; access apps via `kubectl port-forward` for the demo.
+# Node capacity: the single worker cannot boot three full YAS copies (yas + dev +
+# staging) at once — JVMs thrash CPU and exceed startup probes. staging is kept
+# scaled to 0 so its 20 Applications stay present and Synced in ArgoCD (the GitOps
+# deliverable) without competing for CPU. To demo staging at runtime, scale dev
+# down first (set its replicaCount to 0) then bump these to 1.
 backend:
+  replicaCount: 0
   image:
     tag: main
   # See envs/dev/values.yaml: cap Hikari pools so yas + dev + staging together
@@ -17,6 +23,7 @@ backend:
   ingress:
     enabled: false
 ui:
+  replicaCount: 0
   image:
     tag: main
   ingress:
