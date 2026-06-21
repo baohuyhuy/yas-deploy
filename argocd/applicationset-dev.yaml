@@ -16,7 +16,6 @@ spec:
           - { svc: media }
           - { svc: order }
           - { svc: payment }
-          - { svc: payment-paypal }
           - { svc: product }
           - { svc: promotion }
           - { svc: rating }

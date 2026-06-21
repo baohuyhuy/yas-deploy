@@ -9,6 +9,11 @@
 #
 # Ingress is disabled in dev/staging to avoid host collisions with the `yas`
 # namespace; access apps via `kubectl port-forward` for the demo.
+#
+# NB: no global backend.extraEnvs here — it would REPLACE (not merge) each
+# chart's own extraEnvs (e.g. the BFFs' UI_HOST), breaking them. Connection load
+# is handled by giving the shared Postgres pod enough memory (3Gi), not by
+# capping pools.
 backend:
   replicaCount: 1
   image:
@@ -16,18 +21,10 @@ backend:
     pullPolicy: Always
   podAnnotations:
     yas.dev/commit: bootstrap
-  # Three full YAS copies (yas + dev + staging) share one Postgres. Cap each
-  # service's Hikari pool so the combined connection count stays under Postgres
-  # max_connections (otherwise services crashloop on connection-refused at start).
-  extraEnvs:
-    - name: SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE
-      value: "2"
-    - name: SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE
-      value: "1"
   ingress:
     enabled: false
 ui:
-  replicaCount: 0
+  replicaCount: 1
   image:
     tag: main
     pullPolicy: Always
