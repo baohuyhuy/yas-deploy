@@ -12,12 +12,12 @@
 backend:
   replicaCount: 1
   image:
-    tag: main
+    tag: v1.0.0
   ingress:
     enabled: false
 ui:
   replicaCount: 1
   image:
-    tag: main
+    tag: v1.0.0
   ingress:
     enabled: false
