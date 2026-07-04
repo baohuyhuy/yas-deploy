@@ -3,6 +3,7 @@ backend:
   # yas-instrumentation Instrumentation CR in the target namespace)
   podAnnotations:
     instrumentation.opentelemetry.io/inject-java: "true"
+    instrumentation.opentelemetry.io/container-names: "storefront-bff"
   image:
     repository: baohuyhuy/yas-storefront-bff
     tag: main

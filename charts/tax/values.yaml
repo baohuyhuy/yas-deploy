@@ -3,6 +3,7 @@ backend:
   # yas-instrumentation Instrumentation CR in the target namespace)
   podAnnotations:
     instrumentation.opentelemetry.io/inject-java: "true"
+    instrumentation.opentelemetry.io/container-names: "tax"
   image:
     repository: baohuyhuy/yas-tax
     tag: main
