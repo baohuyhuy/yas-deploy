@@ -20,7 +20,7 @@ backend:
     tag: main
     pullPolicy: Always
   podAnnotations:
-    yas.dev/commit: 047a192762f2
+    yas.dev/commit: e0155ddf8485
   # 8 vCPU booting ~19 Spring Boot services at once is slow; widen the startup
   # budget (90 * 10s = 15 min) so CPU-starved boots complete instead of being
   # killed at the default 5 min and re-joining the herd. Maps merge, so this only
@@ -35,7 +35,7 @@ ui:
     tag: main
     pullPolicy: Always
   podAnnotations:
-    yas.dev/commit: 047a192762f2
+    yas.dev/commit: e0155ddf8485
   startupProbe:
     failureThreshold: 90
   ingress:
