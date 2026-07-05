@@ -17,6 +17,12 @@ backend:
     host: api.yas.local.com
     path: /media
     pathType: Prefix
+    annotations:
+      # Istio mesh: route via the Service and pin the Host header so the
+      # sidecar matches the upstream vhost (see app repo k8s/istio/README.md).
+      # Previously only set on the live object; now source-controlled.
+      nginx.ingress.kubernetes.io/service-upstream: "true"
+      nginx.ingress.kubernetes.io/upstream-vhost: media.yas.svc.cluster.local
   extraVolumes:
     - name: media-application
       configMap:

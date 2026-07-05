@@ -12,7 +12,16 @@ backend:
   fullnameOverride: customer
   databaseName: customer
   ingress:
-    enabled: false
+    enabled: true
+    className: nginx
+    host: api.yas.local.com
+    path: /customer
+    pathType: Prefix
+    annotations:
+      # Istio mesh: route via the Service and pin the Host header so the
+      # sidecar matches the upstream vhost (see app repo k8s/istio/README.md).
+      nginx.ingress.kubernetes.io/service-upstream: "true"
+      nginx.ingress.kubernetes.io/upstream-vhost: customer.yas.svc.cluster.local
   extraEnvFroms:
     - secretRef:
         name: yas-keycloak-credentials-secret

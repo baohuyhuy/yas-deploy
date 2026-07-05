@@ -12,7 +12,16 @@ backend:
   fullnameOverride: cart
   databaseName: cart
   ingress:
-    enabled: false
+    enabled: true
+    className: nginx
+    host: api.yas.local.com
+    path: /cart
+    pathType: Prefix
+    annotations:
+      # Istio mesh: route via the Service and pin the Host header so the
+      # sidecar matches the upstream vhost (see app repo k8s/istio/README.md).
+      nginx.ingress.kubernetes.io/service-upstream: "true"
+      nginx.ingress.kubernetes.io/upstream-vhost: cart.yas.svc.cluster.local
   extraVolumes:
     - name: cart-application-config
       configMap:
