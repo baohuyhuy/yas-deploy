@@ -49,7 +49,11 @@ applicationConfig:
 
   logging:
     pattern:
-      level: application=${spring.application.name} traceId=%X{traceId:-} spanId=%X{spanId:-} level=%level
+      # MDC keys trace_id/span_id are what the OTel java agent populates (the
+      # traceId/spanId names belong to micrometer-tracing, which the jars don't
+      # ship). Keep the literal "traceId=" text — the Loki derived field regex
+      # traceId=(\w*) links log lines to Tempo through it.
+      level: application=${spring.application.name} traceId=%X{trace_id:-} spanId=%X{span_id:-} level=%level
 
   spring:
     lifecycle:
